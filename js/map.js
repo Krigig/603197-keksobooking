@@ -40,41 +40,43 @@ var checkouts = ['12:00', '13:00', '14:00'];
 var featuresOll = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var photosOll = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
-var flors = [];
+var ads = [];
 var madeFlor = function (many) {
-  for (var i = 0; i < many; i++) {
-    var array = {};
-    array.author = {};
-    array.author.avatar = 'img/avatars/user0' + (i + 1) + '.png';
+  for (var i = 0; i < many; i++) {  
+    var ad = {
+      'author': {
+        'avatar': 'img/avatars/user0' + (i + 1) + '.png'
+      },
+      'offer': {
+        'title': titles[i],
+        'address': x + ', ' + y,
+        'price': random(1000, 1000000),
+        'type': types[randomArray(types)],
+        'rooms': random(1, 5),
+        'guests': random(0, 10),
+        'checkin': checkins[randomArray(checkins)],
+        'checkout': checkouts[randomArray(checkouts)],
+        'features': [],
+        'description': '',
+        'photos': photosOll
+      },
+      'location': {
+        'x': x,
+        'y': y
+      }
+    };
 
-    array.location = {};
-    // array.location.x = random(0, 100) + '%';
-    array.location.x = random(0, 1200);
-    array.location.y = random(130, 630);
-
-    array.offer = {};
-    array.offer.title = titles[i];
-    array.offer.address = String(array.location.x + ', ' + array.location.y);
-    array.offer.price = random(1000, 1000000);
-    array.offer.type = types[randomArray(types)];
-    array.offer.rooms = random(1, 5);
-    array.offer.guests = random(0, 10);
-    array.offer.checkin = checkins[randomArray(checkins)];
-    array.offer.checkout = checkouts[randomArray(checkouts)];
-
-    array.offer.features = [];
+    var x = random(0, 1200);
+    var y = random(130, 630);
     var longArray = random(1, featuresOll.length);
     for (var j = 0; j < longArray; j++) {
-      array.offer.features.push(featuresOll[j]);
+      ad.offer.features.push(featuresOll[j]);
     }
 
-    array.offer.description = '';
-    array.offer.photos = photosOll;
-
-    flors.push(array);
+    ads.push(ad);
   }
 
-  return flors;
+  return ads;
 };
 
 madeFlor(8);
@@ -82,7 +84,7 @@ madeFlor(8);
 var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
-var renderFlors = function (florsPin) {
+var renderAds = function (florsPin) {
   var florElement = mapPinTemplate.cloneNode(true);
 
   florElement.style.left = florsPin.location.x + 'px';
@@ -141,9 +143,9 @@ var renderCards = function (florsCard) {
 
 var fragment = document.createDocumentFragment();
 var fragmentMap = document.createDocumentFragment();
-for (var i = 0; i < flors.length; i++) {
-  fragment.appendChild(renderFlors(flors[i]));
-  fragmentMap.appendChild(renderCards(flors[i]));
+for (var i = 0; i < ads.length; i++) {
+  fragment.appendChild(renderAds(ads[i]));
+  fragmentMap.appendChild(renderCards(ads[i]));
 }
 
 var mapPins = document.querySelector('.map__pins');
