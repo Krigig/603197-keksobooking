@@ -121,6 +121,11 @@ var renderCards = function (florsCard) {
   for (var k = 0; k < florsCard.offer.features.length; k++) {
     features[k].textContent = florsCard.offer.features[k];
   }
+  if (featuresOll.length > florsCard.offer.features.length) {
+    for (var m = florsCard.offer.features.length - 1; m < featuresOll.length; m++) {
+      cardElement.querySelector('.popup__features').removeChild(features[m]);
+    }
+  }
 
   cardElement.querySelector('.popup__description').textContent = florsCard.offer.description;
   for (k = 0; k < florsCard.offer.photos.length; k++) {
