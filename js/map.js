@@ -117,9 +117,13 @@ var renderCards = function (florsCard) {
   cardElement.querySelector('.popup__text--capacity').textContent = florsCard.offer.rooms + ' комнаты для ' + florsCard.offer.guests + ' гостей';
 
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + florsCard.offer.checkin + ', выезд до ' + florsCard.offer.checkout;
-  cardElement.querySelector('.popup__features').textContent = florsCard.offer.features;
+  var features = cardElement.querySelectorAll('.popup__feature');
+  for (var k = 0; k < florsCard.offer.features.length; k++) {
+    features[k].textContent = florsCard.offer.features[k];
+  }
+
   cardElement.querySelector('.popup__description').textContent = florsCard.offer.description;
-  for (var k = 0; k < florsCard.offer.photos.length; k++) {
+  for (k = 0; k < florsCard.offer.photos.length; k++) {
     var photosArray = cardElement.querySelectorAll('.popup__photos img');
     var photoElement = cardElement.querySelector('.popup__photos img').cloneNode(true);
     photoElement.src = florsCard.offer.photos[k];
