@@ -156,10 +156,10 @@ for (var i = 0; i < ads.length; i++) {
 var mapPins = document.querySelector('.map__pins');
 mapPins.appendChild(fragment);
 
-var renderCard = function (arr) {
+var renderCard = function (ad) {
   var mapCards = document.querySelector('.map');
   var mapPlaceBefore = document.querySelector('.map__filters-container');
-  mapCards.insertBefore(getCardElement(arr), mapPlaceBefore);
+  mapCards.insertBefore(getCardElement(ad), mapPlaceBefore);
 };
 
 renderCard(ads[0]);
