@@ -62,7 +62,7 @@ var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var photos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
 var ads = [];
-var getAds = function (many) {
+var getAdsInfo = function (many) {
   for (var i = 0; i < many; i++) {
     var x = random(0, document.body.clientWidth);
     var y = random(130, 630);
@@ -96,12 +96,11 @@ var getAds = function (many) {
   return ads;
 };
 
-getAds(8);
 
 var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
-var renderAds = function (florsPin) {
+var getAds = function (florsPin) {
   var florElement = mapPinTemplate.cloneNode(true);
 
   florElement.style.left = florsPin.location.x + 'px';
@@ -111,6 +110,17 @@ var renderAds = function (florsPin) {
 
   return florElement;
 };
+
+var mapPins = document.querySelector('.map__pins');
+var renderAds = function (adsArray) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < adsArray.length; i++) {
+    fragment.appendChild(getAds(adsArray[i]));
+  }
+  mapPins.appendChild(fragment);
+  return mapPins;
+};
+
 
 var getCardElement = function (ad) {
   var cardElement = mapCardTemplate.cloneNode(true);
@@ -148,20 +158,104 @@ var getCardElement = function (ad) {
   return cardElement;
 };
 
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < ads.length; i++) {
-  fragment.appendChild(renderAds(ads[i]));
-}
-
-var mapPins = document.querySelector('.map__pins');
-mapPins.appendChild(fragment);
-
 var renderCard = function (ad) {
   var mapCards = document.querySelector('.map');
   var mapPlaceBefore = document.querySelector('.map__filters-container');
   mapCards.insertBefore(getCardElement(ad), mapPlaceBefore);
 };
 
-renderCard(ads[0]);
 
-document.querySelector('.map').classList.remove('map--faded');
+var removeCard = function () {
+  var mapCards = document.querySelector('.map');
+  var mapCardsElement = mapCards.querySelector('article.map__card.popup');
+  if (!(mapCardsElement === null)) {
+    mapCards.removeChild(mapCardsElement);
+  }
+};
+
+var buttonClickHandler = function () {
+  var buttonCloseAd = document.querySelector('.popup__close');
+
+  buttonCloseAd.addEventListener('click', function () {
+    removeCard();
+  });
+
+  buttonCloseAd.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 27) {
+      removeCard();
+    }
+  });
+};
+var adFormElements = document.querySelectorAll('.ad-form fieldset');
+var inputsAdForm = document.querySelectorAll('.ad-form input');
+var inputAddress = document.querySelector('#address');
+var button = document.querySelector('.map__pin--main');
+
+
+var getDisabled = function (arr) {
+  for (var i = 0; i < arr.length; i++) {
+    arr[i].disabled = true;
+  }
+  return arr;
+};
+
+getDisabled(adFormElements);
+getDisabled(inputsAdForm);
+
+var buttonKeydownHandler = function (evt) {
+  if (evt.keyCode === 13) {
+    getActive();
+  }
+};
+
+var getActive = function () {
+  var disapledElements = document.querySelectorAll('.ad-form [disabled]');
+  for (var i = 0; i < disapledElements.length; i++) {
+    disapledElements[i].disabled = false;
+  }
+
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+
+  getAdsInfo(8);
+  renderAds(ads);
+  var mapPinsArray = document.querySelectorAll('.map__pin[type=button]');
+
+
+  var mapPinsArrayClickHandler = function (mapPin, ad) {
+    mapPin.addEventListener('click', function () {
+      removeCard();
+      renderCard(ad);
+      buttonClickHandler();
+    });
+  };
+
+  for (var k = 0; k < mapPinsArray.length; k++) {
+    mapPinsArrayClickHandler(mapPinsArray[k], ads[k]);
+  }
+
+  button.removeEventListener('mouseup', getActive);
+  button.removeEventListener('keydown', buttonKeydownHandler);
+
+};
+
+
+button.addEventListener('mouseup', getActive);
+button.addEventListener('keydown', buttonKeydownHandler);
+
+button.addEventListener('load', function (evt) {
+  var buttonMiddleWidth = 156 / 2;
+  var buttonHeight = 156 / 2;
+  var buttonX = evt.target.x + buttonMiddleWidth;
+  var buttonY = evt.target.y + buttonHeight;
+  inputAddress.value = buttonX + ', ' + buttonY;
+});
+
+
+button.addEventListener('mouseup', function (evt) {
+  var buttonMiddleWidth = 65 / 2;
+  var buttonHeight = 84;
+  var buttonX = evt.target.x + buttonMiddleWidth;
+  var buttonY = evt.target.y + buttonHeight;
+  inputAddress.value = buttonX + ', ' + buttonY;
+});
