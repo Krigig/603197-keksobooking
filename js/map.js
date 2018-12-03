@@ -25,7 +25,7 @@
 //     }
 //   }
 // ];
-
+var ADS_MANY = 8;
 var getShuffledArray = function (arr) {
   var copyArr = arr.concat();
   copyArr.sort(function () {
@@ -189,24 +189,25 @@ var buttonClickHandler = function () {
 var adFormElements = document.querySelectorAll('.ad-form fieldset');
 var inputsAdForm = document.querySelectorAll('.ad-form input');
 var inputAddress = document.querySelector('#address');
-var button = document.querySelector('.map__pin--main');
+var mainPinElement = document.querySelector('.map__pin--main');
 
+var BUTTON_MIDLE_WIDTH = 65 / 2;
+var BUTTON_HEIGHT = 65;
+var BUTTON_HEIGHT_END = BUTTON_HEIGHT + 20;
+inputAddress.value = (document.body.clientWidth / 2) + ', ' + 400;
+
+var setCoords = function (x, y) {
+  inputAddress.value = x + ', ' + y;
+};
 
 var getDisabled = function (arr) {
   for (var i = 0; i < arr.length; i++) {
     arr[i].disabled = true;
   }
-  return arr;
 };
 
 getDisabled(adFormElements);
 getDisabled(inputsAdForm);
-
-var buttonKeydownHandler = function (evt) {
-  if (evt.keyCode === 13) {
-    getActive();
-  }
-};
 
 var getActive = function () {
   var disapledElements = document.querySelectorAll('.ad-form [disabled]');
@@ -214,10 +215,12 @@ var getActive = function () {
     disapledElements[i].disabled = false;
   }
 
+  setCoords();
+
   document.querySelector('.map').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
-  getAdsInfo(8);
+  ads = getAdsInfo(ADS_MANY);
   renderAds(ads);
   var mapPinsArray = document.querySelectorAll('.map__pin[type=button]');
 
@@ -234,28 +237,14 @@ var getActive = function () {
     mapPinsArrayClickHandler(mapPinsArray[k], ads[k]);
   }
 
-  button.removeEventListener('mouseup', getActive);
-  button.removeEventListener('keydown', buttonKeydownHandler);
+  mainPinElement.removeEventListener('mouseup', getActive);
 
 };
 
-
-button.addEventListener('mouseup', getActive);
-button.addEventListener('keydown', buttonKeydownHandler);
-
-button.addEventListener('load', function (evt) {
-  var buttonMiddleWidth = 156 / 2;
-  var buttonHeight = 156 / 2;
-  var buttonX = evt.target.x + buttonMiddleWidth;
-  var buttonY = evt.target.y + buttonHeight;
-  inputAddress.value = buttonX + ', ' + buttonY;
+mainPinElement.addEventListener('mouseup', getActive);
+mainPinElement.addEventListener('mouseup', function (evt) {
+  var buttonX = evt.target.x + BUTTON_MIDLE_WIDTH;
+  var buttonY = evt.target.y + BUTTON_HEIGHT_END;
+  setCoords(buttonX, buttonY);
 });
 
-
-button.addEventListener('mouseup', function (evt) {
-  var buttonMiddleWidth = 65 / 2;
-  var buttonHeight = 84;
-  var buttonX = evt.target.x + buttonMiddleWidth;
-  var buttonY = evt.target.y + buttonHeight;
-  inputAddress.value = buttonX + ', ' + buttonY;
-});
