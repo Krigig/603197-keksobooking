@@ -62,7 +62,7 @@ var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var photos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
 var ads = [];
-var getAdsInfo = function (many) {
+var getAds = function (many) {
   for (var i = 0; i < many; i++) {
     var x = random(0, document.body.clientWidth);
     var y = random(130, 630);
@@ -100,7 +100,7 @@ var getAdsInfo = function (many) {
 var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
-var getAds = function (florsPin) {
+var getPinElements = function (florsPin) {
   var florElement = mapPinTemplate.cloneNode(true);
 
   florElement.style.left = florsPin.location.x + 'px';
@@ -115,7 +115,7 @@ var mapPins = document.querySelector('.map__pins');
 var renderAds = function (adsArray) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < adsArray.length; i++) {
-    fragment.appendChild(getAds(adsArray[i]));
+    fragment.appendChild(getPinElements(adsArray[i]));
   }
   mapPins.appendChild(fragment);
   return mapPins;
@@ -220,7 +220,7 @@ var getActive = function () {
   document.querySelector('.map').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
-  ads = getAdsInfo(ADS_MANY);
+  ads = getAds(ADS_MANY);
   renderAds(ads);
   var mapPinsArray = document.querySelectorAll('.map__pin[type=button]');
 
