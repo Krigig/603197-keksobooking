@@ -115,12 +115,21 @@ var mapPins = document.querySelector('.map__pins');
 var renderAds = function (adsArray) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < adsArray.length; i++) {
-    fragment.appendChild(getPinElements(adsArray[i]));
+    var pinElement = getPinElements(adsArray[i]);
+    mapPinsArrayClickHandler(pinElement, ads[i]);
+    fragment.appendChild(pinElement);
   }
   mapPins.appendChild(fragment);
   return mapPins;
 };
 
+var mapPinsArrayClickHandler = function (mapPin, ad) {
+  mapPin.addEventListener('click', function () {
+    removeCard();
+    renderCard(ad);
+    buttonClickHandler();
+  });
+};
 
 var getCardElement = function (ad) {
   var cardElement = mapCardTemplate.cloneNode(true);
@@ -222,21 +231,7 @@ var getActive = function () {
 
   ads = getAds(ADS_MANY);
   renderAds(ads);
-  var mapPinsArray = document.querySelectorAll('.map__pin[type=button]');
-
-
-  var mapPinsArrayClickHandler = function (mapPin, ad) {
-    mapPin.addEventListener('click', function () {
-      removeCard();
-      renderCard(ad);
-      buttonClickHandler();
-    });
-  };
-
-  for (var k = 0; k < mapPinsArray.length; k++) {
-    mapPinsArrayClickHandler(mapPinsArray[k], ads[k]);
-  }
-
+  
   mainPinElement.removeEventListener('mouseup', getActive);
 
 };
