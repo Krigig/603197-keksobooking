@@ -252,15 +252,24 @@ formElement.querySelector('#timeout').addEventListener('change', function () {
   timeinNewAdElements.selectedIndex = timeoutNewAdElements.selectedIndex;
 });
 
-// var roomNumberNewAdElement = formElement.querySelector('#room_number');
-// var roomNumberIndex = roomNumberNewAdElement.options.selectedIndex;
-// var roomNumberValue = roomNumberNewAdElement[roomNumberIndex].value;
-// var capacityNewAdElement = formElement.querySelector('#capacity');
+formElement.querySelector('#room_number').addEventListener('change', function () {
+  var roomNumberNewAdElement = formElement.querySelector('#room_number');
+  var roomNumberIndex = roomNumberNewAdElement.options.selectedIndex;
+  var roomNumberValue = roomNumberNewAdElement[roomNumberIndex].value;
+  var capacityNewAdElement = formElement.querySelector('#capacity');
 
-// if (roomNumberValue === 1) {
-//   for(var i = 0; i < 4; i++) {
-//     if (!(capacityNewAdElement.value === 1)) {
+  if (roomNumberValue < 100) {
+    capacityNewAdElement.removeChild(capacityNewAdElement.options[3]);
+    if (roomNumberValue < 3) {
+      capacityNewAdElement.removeChild(capacityNewAdElement.options[0]);
+    }
+    if (roomNumberValue < 2) {
+      capacityNewAdElement.removeChild(capacityNewAdElement.options[1]);
+    }
+  } else {
+    for (var i = 0; i < capacityNewAdElement.options.length - 1; i++) {
+      capacityNewAdElement.removeChild(capacityNewAdElement.options[i]);
+    }
+  }
+});
 
-//     }
-//   }
-// }
