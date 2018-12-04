@@ -94,7 +94,7 @@ var getPinElement = function (florsPin) {
 
   PinElement.addEventListener('click', function () {
     removeCard();
-    renderCard(ads[i]);
+    renderCard(florsPin);
     buttonClickHandler();
   });
 
@@ -185,30 +185,21 @@ var setCoords = function (x, y) {
   inputAddress.value = x + ', ' + y;
 };
 
-var getDisabled = function (arr) {
-  for (var i = 0; i < arr.length; i++) {
-    arr[i].disabled = true;
-  }
-};
-
 var toggleFields = function (isDisabled) {
-  if (isDisabled) {
-    mapElement.classList.remove('map--faded');
-    formElement.classList.remove('ad-form--disabled');
-    var disapledElements = document.querySelectorAll('.ad-form [disabled]');
-    for (var i = 0; i < disapledElements.length; i++) {
-      disapledElements[i].disabled = false;
-    }
-  } else {
-    mapElement.classList.add('map--faded');
-    formElement.classList.add('ad-form--disabled');
-    getDisabled(adFormElements);
-    getDisabled(inputsAdForm);
+  mapElement.classList[isDisabled ? 'add' : 'remove']('map--faded');
+  formElement.classList[isDisabled ? 'add' : 'remove']('ad-form--disabled');
+
+  for (var i = 0; i < adFormElements.length; i++) {
+    adFormElements[i].disabled = isDisabled;
+  }
+  for (i = 0; i < inputsAdForm.length; i++) {
+    inputsAdForm[i].disabled = isDisabled;
   }
 };
+toggleFields(true);
 
 var activateMap = function (evt) {
-  toggleFields(true);
+  toggleFields(false);
 
   var buttonX = evt.clientX + BUTTON_MIDLE_WIDTH;
   var buttonY = evt.clientY + BUTTON_HEIGHT_END;
