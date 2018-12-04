@@ -258,18 +258,21 @@ formElement.querySelector('#room_number').addEventListener('change', function ()
   var roomNumberValue = roomNumberNewAdElement[roomNumberIndex].value;
   var capacityNewAdElement = formElement.querySelector('#capacity');
 
-  if (roomNumberValue < 100) {
-    capacityNewAdElement.removeChild(capacityNewAdElement.options[3]);
-    if (roomNumberValue < 3) {
-      capacityNewAdElement.removeChild(capacityNewAdElement.options[0]);
-    }
-    if (roomNumberValue < 2) {
-      capacityNewAdElement.removeChild(capacityNewAdElement.options[1]);
+
+  if (roomNumberValue === '100') {
+    capacityNewAdElement.options[3].disabled = false;
+    for (var i = 0; i < capacityNewAdElement.options.length - 1; i++) {
+      capacityNewAdElement.options[i].disabled = true;
     }
   } else {
-    for (var i = 0; i < capacityNewAdElement.options.length - 1; i++) {
-      capacityNewAdElement.removeChild(capacityNewAdElement.options[i]);
+    for (i = 0; i < capacityNewAdElement.options.length; i++) {
+      if (capacityNewAdElement[i].value <= roomNumberValue) {
+        capacityNewAdElement.options[i].disabled = false;
+      } else {
+        capacityNewAdElement.options[i].disabled = true;
+      }
     }
+    capacityNewAdElement.options[3].disabled = true;
   }
 });
 
