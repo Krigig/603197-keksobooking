@@ -31,6 +31,12 @@ var getRamdomArray = function (arr) {
   return shuffledArray.slice(0, ramdomEnd);
 };
 
+var escPressHandler = function (evt) {
+  if (evt.keyCode === ESC_KEY) {
+    removeCard();
+  }
+};
+
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var types = ['palace', 'flat', 'house', 'bungalo'];
 var translationTypes = {
@@ -84,21 +90,20 @@ var getAds = function (many) {
 var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
-var getPinElement = function (florsPin) {
-  var PinElement = mapPinTemplate.cloneNode(true);
+var getPinElement = function (ad) {
+  var pinElement = mapPinTemplate.cloneNode(true);
 
-  PinElement.style.left = florsPin.location.x + 'px';
-  PinElement.style.top = florsPin.location.y + 'px';
-  PinElement.querySelector('img').src = florsPin.author.avatar;
-  PinElement.querySelector('img').alt = florsPin.offer.title;
+  pinElement.style.left = ad.location.x + 'px';
+  pinElement.style.top = ad.location.y + 'px';
+  pinElement.querySelector('img').src = ad.author.avatar;
+  pinElement.querySelector('img').alt = ad.offer.title;
 
-  PinElement.addEventListener('click', function () {
+  pinElement.addEventListener('click', function () {
     removeCard();
-    renderCard(florsPin);
-    buttonClickHandler();
+    renderCard(ad);
   });
 
-  return PinElement;
+  return pinElement;
 };
 
 var mapPins = document.querySelector('.map__pins');
@@ -145,6 +150,11 @@ var getCardElement = function (ad) {
   }
   cardElement.querySelector('.popup__photos').removeChild(photosArray[0]);
 
+  var buttonCloseAd = cardElement.querySelector('.popup__close');
+  buttonCloseAd.addEventListener('click', function () {
+    removeCard();
+  });
+  document.addEventListener('keydown', escPressHandler);
   return cardElement;
 };
 
@@ -155,25 +165,12 @@ var renderCard = function (ad) {
 
 
 var removeCard = function () {
-  var mapCardsElement = mapElement.querySelector('article.map__card.popup');
+  var mapCardsElement = mapElement.querySelector('.map__card');
   if (!(mapCardsElement === null)) {
     mapElement.removeChild(mapCardsElement);
   }
 };
 
-var buttonClickHandler = function () {
-  var buttonCloseAd = document.querySelector('.popup__close');
-
-  buttonCloseAd.addEventListener('click', function () {
-    removeCard();
-  });
-
-  buttonCloseAd.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC_KEY) {
-      removeCard();
-    }
-  });
-};
 var adFormElements = document.querySelectorAll('.ad-form fieldset');
 var inputsAdForm = document.querySelectorAll('.ad-form input');
 var inputAddress = document.querySelector('#address');
