@@ -31,12 +31,6 @@ var getRamdomArray = function (arr) {
   return shuffledArray.slice(0, ramdomEnd);
 };
 
-var escPressHandler = function (evt) {
-  if (evt.keyCode === ESC_KEY) {
-    removeCard();
-  }
-};
-
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var types = ['palace', 'flat', 'house', 'bungalo'];
 var translationTypes = {
@@ -150,17 +144,24 @@ var getCardElement = function (ad) {
   }
   cardElement.querySelector('.popup__photos').removeChild(photosArray[0]);
 
-  var buttonCloseAd = cardElement.querySelector('.popup__close');
-  buttonCloseAd.addEventListener('click', function () {
+  var popupCloseElement = cardElement.querySelector('.popup__close');
+  popupCloseElement.addEventListener('click', function () {
     removeCard();
   });
-  document.addEventListener('keydown', escPressHandler);
+
   return cardElement;
+};
+
+var escButtonPressHandler = function (evt) {
+  if (evt.keyCode === ESC_KEY) {
+    removeCard();
+  }
 };
 
 var renderCard = function (ad) {
   var mapPlaceBefore = document.querySelector('.map__filters-container');
   mapElement.insertBefore(getCardElement(ad), mapPlaceBefore);
+  document.addEventListener('keydown', escButtonPressHandler);
 };
 
 
@@ -168,6 +169,7 @@ var removeCard = function () {
   var mapCardsElement = mapElement.querySelector('.map__card');
   if (!(mapCardsElement === null)) {
     mapElement.removeChild(mapCardsElement);
+    document.removeEventListener('keyup', escButtonPressHandler);
   }
 };
 
