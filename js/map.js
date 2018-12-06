@@ -2,9 +2,11 @@
 
 var ADS_COUNT = 8;
 var BUTTON_MIDLE_WIDTH = 65 / 2;
-var BUTTON_HEIGHT = 65;
-var BUTTON_HEIGHT_END = BUTTON_HEIGHT + 20;
+var BUTTON_HEIGHT = 62;
+var BUTTON_HEIGHT_END = BUTTON_HEIGHT + 22;
 var ESC_KEY = 27;
+var COORD_Y_MAX = 630;
+var COORD_Y_MIN = 130;
 
 var mapElement = document.querySelector('.map');
 var formElement = document.querySelector('.ad-form');
@@ -49,7 +51,7 @@ var getAds = function (many) {
   var result = [];
   for (var i = 0; i < many; i++) {
     var x = random(0, document.body.clientWidth);
-    var y = random(130, 630);
+    var y = random(COORD_Y_MIN, COORD_Y_MAX);
 
     var ad = {
       'author': {
@@ -194,24 +196,78 @@ var toggleFields = function (isDisabled) {
   for (i = 0; i < inputsAdForm.length; i++) {
     inputsAdForm[i].disabled = isDisabled;
   }
+  return isDisabled;
 };
-toggleFields(true);
 
-var activateMap = function (evt) {
-  toggleFields(false);
+var isDisabled = toggleFields(true);
 
-  var buttonX = evt.clientX + BUTTON_MIDLE_WIDTH;
-  var buttonY = evt.clientY + BUTTON_HEIGHT_END;
-  setCoords(buttonX, buttonY);
+var activateMap = function () {
+  isDisabled = toggleFields(false);
 
   var ads = getAds(ADS_COUNT);
   renderAds(ads);
-
-  mainPinElement.removeEventListener('mouseup', activateMap);
 };
 
+// Перетаскивание главного пина
 
-mainPinElement.addEventListener('mouseup', activateMap);
+mainPinElement.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var mainPinElementCoords = {
+    'x': mainPinElement.offsetLeft + BUTTON_MIDLE_WIDTH,
+    'y': mainPinElement.offsetTop + BUTTON_HEIGHT_END
+  };
+  var dragged = false;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    mainPinElementCoords.x = mainPinElementCoords.x - shift.x;
+    mainPinElementCoords.y = mainPinElementCoords.y - shift.y;
+
+    var mainPinElementCoordsCSS = {
+      'x': mainPinElement.offsetLeft - shift.x,
+      'y': mainPinElement.offsetTop - shift.y
+    };
+
+    if (mainPinElementCoordsCSS.y < COORD_Y_MAX && mainPinElementCoordsCSS.y > COORD_Y_MIN && (mainPinElementCoords.x + BUTTON_MIDLE_WIDTH) < mainPinElement.offsetParent.offsetWidth && (mainPinElementCoords.x - BUTTON_MIDLE_WIDTH) > 0) {
+      mainPinElement.style.left = mainPinElementCoordsCSS.x + 'px';
+      mainPinElement.style.top = mainPinElementCoordsCSS.y + 'px';
+      setCoords(mainPinElementCoords.x, mainPinElementCoords.y);
+    }
+
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    if (isDisabled && dragged) {
+      activateMap();
+    }
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
 
 // Валидация формы
 
@@ -225,22 +281,21 @@ var minPriceTypes = {
 var typeNewAdElement = formElement.querySelector('#type');
 var priceNewAdElement = formElement.querySelector('#price');
 
-var formElementPriceInvalidHandler = function () {
-  var type = typeNewAdElement.options[typeNewAdElement.options.selectedIndex];
-  priceNewAdElement.minLength = minPriceTypes[type.text];
-  priceNewAdElement.placeholder = minPriceTypes[type.text];
-
-  if (priceNewAdElement.value < priceNewAdElement.minLength) {
-    priceNewAdElement.style.border = '2px solid red';
-  } else if (priceNewAdElement.value > priceNewAdElement.maxLength) {
-    priceNewAdElement.style.border = '2px solid red';
-  } else {
-    priceNewAdElement.style.border = '';
-  }
+var priceHandler = function (evt) {
+  priceNewAdElement.style.border = evt.target.valueAsNumber < evt.target.min || evt.target.valueAsNumber > evt.target.max ? '2px solid red' : '';
 };
 
-typeNewAdElement.addEventListener('change', formElementPriceInvalidHandler);
-priceNewAdElement.addEventListener('change', formElementPriceInvalidHandler);
+var typeHandler = function () {
+  var type = typeNewAdElement.options[typeNewAdElement.options.selectedIndex];
+  priceNewAdElement.min = minPriceTypes[type.text];
+  priceNewAdElement.placeholder = minPriceTypes[type.text];
+
+  priceNewAdElement.style.border = priceNewAdElement.value < priceNewAdElement.min || priceNewAdElement.value > priceNewAdElement.max ? '2px solid red' : '';
+};
+
+typeHandler();
+typeNewAdElement.addEventListener('change', typeHandler);
+priceNewAdElement.addEventListener('change', priceHandler);
 
 
 var timeinNewAdElements = formElement.querySelector('#timein').options;
@@ -256,8 +311,7 @@ formElement.querySelector('#timeout').addEventListener('change', function () {
 
 var invalidCapacity = function () {
   var roomNumberNewAdElement = formElement.querySelector('#room_number');
-  var roomNumberIndex = roomNumberNewAdElement.options.selectedIndex;
-  var roomNumberValue = roomNumberNewAdElement[roomNumberIndex].value;
+  var roomNumberValue = roomNumberNewAdElement.value;
   var capacityNewAdElement = formElement.querySelector('#capacity');
 
   if (roomNumberValue === '100') {
@@ -267,7 +321,7 @@ var invalidCapacity = function () {
     }
   } else {
     for (i = 0; i < capacityNewAdElement.options.length; i++) {
-      if (capacityNewAdElement[i].value <= roomNumberValue) {
+      if (capacityNewAdElement.options[i].value <= roomNumberValue) {
         capacityNewAdElement.options[i].disabled = false;
       } else {
         capacityNewAdElement.options[i].disabled = true;
@@ -278,11 +332,7 @@ var invalidCapacity = function () {
 
   var capacityIndex = capacityNewAdElement.options.selectedIndex;
   var capacityOptionElement = capacityNewAdElement.options[capacityIndex];
-  if (capacityOptionElement.disabled) {
-    capacityNewAdElement.style.border = '2px solid red';
-  } else {
-    capacityNewAdElement.style.border = '';
-  }
+  capacityNewAdElement.style.border = capacityOptionElement.disabled ? '2px solid red' : '';
 };
 
 invalidCapacity();
