@@ -225,11 +225,23 @@ var minPriceTypes = {
 var typeNewAdElement = formElement.querySelector('#type');
 var priceNewAdElement = formElement.querySelector('#price');
 
-typeNewAdElement.addEventListener('change', function () {
+var formElementPriceInvalidHandler = function () {
   var type = typeNewAdElement.options[typeNewAdElement.options.selectedIndex];
-  priceNewAdElement.minlength = minPriceTypes[type.text];
+  priceNewAdElement.minLength = minPriceTypes[type.text];
   priceNewAdElement.placeholder = minPriceTypes[type.text];
-});
+
+  if (priceNewAdElement.value < priceNewAdElement.minLength) {
+    priceNewAdElement.style.border = '2px solid red';
+  } else if (priceNewAdElement.value > priceNewAdElement.maxLength) {
+    priceNewAdElement.style.border = '2px solid red';
+  } else {
+    priceNewAdElement.style.border = '';
+  }
+};
+
+typeNewAdElement.addEventListener('change', formElementPriceInvalidHandler);
+priceNewAdElement.addEventListener('change', formElementPriceInvalidHandler);
+
 
 var timeinNewAdElements = formElement.querySelector('#timein').options;
 var timeoutNewAdElements = formElement.querySelector('#timeout').options;
@@ -242,12 +254,11 @@ formElement.querySelector('#timeout').addEventListener('change', function () {
   timeinNewAdElements.selectedIndex = timeoutNewAdElements.selectedIndex;
 });
 
-formElement.querySelector('#room_number').addEventListener('change', function () {
+var invalidCapacity = function () {
   var roomNumberNewAdElement = formElement.querySelector('#room_number');
   var roomNumberIndex = roomNumberNewAdElement.options.selectedIndex;
   var roomNumberValue = roomNumberNewAdElement[roomNumberIndex].value;
   var capacityNewAdElement = formElement.querySelector('#capacity');
-
 
   if (roomNumberValue === '100') {
     capacityNewAdElement.options[3].disabled = false;
@@ -264,5 +275,17 @@ formElement.querySelector('#room_number').addEventListener('change', function ()
     }
     capacityNewAdElement.options[3].disabled = true;
   }
-});
+
+  var capacityIndex = capacityNewAdElement.options.selectedIndex;
+  var capacityOptionElement = capacityNewAdElement.options[capacityIndex];
+  if (capacityOptionElement.disabled) {
+    capacityNewAdElement.style.border = '2px solid red';
+  } else {
+    capacityNewAdElement.style.border = '';
+  }
+};
+
+invalidCapacity();
+formElement.querySelector('#room_number').addEventListener('change', invalidCapacity);
+formElement.querySelector('#capacity').addEventListener('change', invalidCapacity);
 
