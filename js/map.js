@@ -272,28 +272,30 @@ mainPinElement.addEventListener('mousedown', function (evt) {
 // Валидация формы
 
 var minPriceTypes = {
-  'Дворец': 10000,
-  'Квартира': 1000,
-  'Дом': 5000,
-  'Бунгало': 0
+  palace: 10000,
+  flat: 1000,
+  house: 5000,
+  bungalo: 0
 };
 
 var typeNewAdElement = formElement.querySelector('#type');
 var priceNewAdElement = formElement.querySelector('#price');
 
-var priceHandler = function (evt) {
-  priceNewAdElement.style.border = evt.target.valueAsNumber < evt.target.min || evt.target.valueAsNumber > evt.target.max ? '2px solid red' : '';
+// var priceHandler = function (evt) {
+//   priceNewAdElement.style.border = evt.target.valueAsNumber < evt.target.min || evt.target.valueAsNumber > evt.target.max ? '2px solid red' : '';
+// };
+var priceHandler = function () {
+  priceNewAdElement.style.border = priceNewAdElement.valueAsNumber < priceNewAdElement.min || priceNewAdElement.valueAsNumber > priceNewAdElement.max ? '2px solid red' : '';
 };
 
-var typeHandler = function () {
-  var type = typeNewAdElement.options[typeNewAdElement.options.selectedIndex];
-  priceNewAdElement.min = minPriceTypes[type.text];
-  priceNewAdElement.placeholder = minPriceTypes[type.text];
+var typeHandler = function (evt) {
+  var type = evt.target.value;
+  priceNewAdElement.min = minPriceTypes[type];
+  priceNewAdElement.placeholder = minPriceTypes[type];
 
-  priceNewAdElement.style.border = priceNewAdElement.value < priceNewAdElement.min || priceNewAdElement.value > priceNewAdElement.max ? '2px solid red' : '';
+  priceHandler();
 };
 
-typeHandler();
 typeNewAdElement.addEventListener('change', typeHandler);
 priceNewAdElement.addEventListener('change', priceHandler);
 
