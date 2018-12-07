@@ -344,4 +344,3 @@ var invalidCapacity = function () {
 invalidCapacity();
 formElement.querySelector('#room_number').addEventListener('change', invalidCapacity);
 formElement.querySelector('#capacity').addEventListener('change', invalidCapacity);
-
