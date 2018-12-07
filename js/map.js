@@ -281,19 +281,15 @@ var minPriceTypes = {
 var typeNewAdElement = formElement.querySelector('#type');
 var priceNewAdElement = formElement.querySelector('#price');
 
-// var priceHandler = function (evt) {evt.target.valueAsNumber
-//   priceNewAdElement.style.border = evt.target.valueAsNumber < evt.target.min || evt.target.valueAsNumber > evt.target.max ? '2px solid red' : '';
-// };
-
-var priceInvalid = function (input) {
-  if (input.value === '') {
-    input.valueAsNumber = 0;
+var priceInvalid = function (number) {
+  if (number === '') {
+    number = 0;
   }
-  input.style.border = input.valueAsNumber < input.min || input.valueAsNumber > input.max ? '2px solid red' : '';
+  priceNewAdElement.style.border = +number < priceNewAdElement.min || +number > priceNewAdElement.max ? '2px solid red' : '';
 };
 
 var priceHandler = function (evt) {
-  priceInvalid(evt.target);
+  priceInvalid(evt.target.value);
 };
 
 var typeHandler = function (evt) {
@@ -301,7 +297,7 @@ var typeHandler = function (evt) {
   priceNewAdElement.min = minPriceTypes[type];
   priceNewAdElement.placeholder = minPriceTypes[type];
 
-  priceInvalid(priceNewAdElement);
+  priceInvalid(priceNewAdElement.value);
 };
 
 typeNewAdElement.addEventListener('change', typeHandler);
