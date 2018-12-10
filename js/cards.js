@@ -58,14 +58,14 @@
 
   var renderCard = function (ad) {
     var mapPlaceBefore = document.querySelector('.map__filters-container');
-    window.map.mapElement.insertBefore(getCardElement(ad), mapPlaceBefore);
+    window.map.insertBefore(getCardElement(ad), mapPlaceBefore);
     document.addEventListener('keydown', escButtonPressHandler);
   };
 
   var removeCard = function () {
-    var mapCardsElement = window.map.mapElement.querySelector('.map__card');
+    var mapCardsElement = window.map.querySelector('.map__card');
     if (!(mapCardsElement === null)) {
-      window.map.mapElement.removeChild(mapCardsElement);
+      window.map.removeChild(mapCardsElement);
       document.removeEventListener('keyup', escButtonPressHandler);
     }
   };

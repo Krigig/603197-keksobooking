@@ -11,10 +11,11 @@
 
   var mapElement = document.querySelector('.map');
   var mapPins = document.querySelector('.map__pins');
+
   var renderAds = function (adsArray) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < adsArray.length; i++) {
-      var pinElement = window.pin(adsArray[i]);
+      var pinElement = window.pin(adsArray[i], pinClickHandler);
       fragment.appendChild(pinElement);
     }
     mapPins.appendChild(fragment);
@@ -59,7 +60,7 @@
     window.cards.renderCard(ad);
   };
 
-// Перетаскивание главного пина
+  // Перетаскивание главного пина
 
   mainPinElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -119,8 +120,6 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  window.map = {
-    pinClickHandler: pinClickHandler,
-    mapElement: mapElement
-  };
+  window.map = mapElement;
 })();
+

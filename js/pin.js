@@ -4,7 +4,7 @@
 
   var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-  var getPinElement = function (ad) {
+  var getPinElement = function (ad, clickHandler) {
     var pinElement = mapPinTemplate.cloneNode(true);
 
     pinElement.style.left = ad.location.x + 'px';
@@ -13,7 +13,7 @@
     pinElement.querySelector('img').alt = ad.offer.title;
 
     pinElement.addEventListener('click', function () {
-      window.map.pinClickHandler(ad);
+      clickHandler(ad);
     });
 
     return pinElement;
