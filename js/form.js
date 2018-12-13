@@ -45,10 +45,11 @@
     timeinNewAdElements.selectedIndex = timeoutNewAdElements.selectedIndex;
   });
 
-  var invalidCapacity = function () {
-    var roomNumberNewAdElement = formElement.querySelector('#room_number');
+  var roomNumberNewAdElement = formElement.querySelector('#room_number');
+  var capacityNewAdElement = formElement.querySelector('#capacity');
+
+  var madeDisabledCapacity = function () {
     var roomNumberValue = roomNumberNewAdElement.value;
-    var capacityNewAdElement = formElement.querySelector('#capacity');
 
     if (roomNumberValue === '100') {
       capacityNewAdElement.options[3].disabled = false;
@@ -65,14 +66,48 @@
       }
       capacityNewAdElement.options[3].disabled = true;
     }
+  };
 
+  var madeErrorCapacity = function () {
     var capacityIndex = capacityNewAdElement.options.selectedIndex;
     var capacityOptionElement = capacityNewAdElement.options[capacityIndex];
     capacityNewAdElement.style.border = capacityOptionElement.disabled ? '2px solid red' : '';
+    return capacityOptionElement.disabled;
   };
 
-  invalidCapacity();
-  formElement.querySelector('#room_number').addEventListener('change', invalidCapacity);
-  formElement.querySelector('#capacity').addEventListener('change', invalidCapacity);
+  var checkInvalidCapacityHandler = function () {
+    madeDisabledCapacity();
+    madeErrorCapacity();
+  };
 
+  checkInvalidCapacityHandler();
+  formElement.querySelector('#room_number').addEventListener('change', checkInvalidCapacityHandler);
+  formElement.querySelector('#capacity').addEventListener('change', checkInvalidCapacityHandler);
+
+  var resetHandler = function () {
+    formElement.reset();
+    window.map.disabledMap();
+  };
+
+  var successHandler = function () {
+    window.utils.resultSendHandler('success');
+    resetHandler();
+  };
+
+  var errorHandler = function () {
+    window.utils.resultSendHandler('error');
+  };
+
+  var btnReset = formElement.querySelector('.ad-form__reset');
+  btnReset.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    resetHandler();
+  });
+
+  formElement.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    if (!madeErrorCapacity()) {
+      window.backend.upload(new FormData(formElement), successHandler, errorHandler);
+    }
+  });
 })();
