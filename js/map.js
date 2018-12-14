@@ -15,7 +15,7 @@
   var renderAds = function (adsArray) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < adsArray.length; i++) {
-      if (adsArray[i].hasOwnProperty('offer')) {
+      if (adsArray[i].offer) {
         var pinElement = window.pin(adsArray[i], pinClickHandler);
         fragment.appendChild(pinElement);
       }

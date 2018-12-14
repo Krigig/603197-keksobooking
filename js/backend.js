@@ -14,15 +14,14 @@
       } else {
         errorHandler('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
-
-      xhr.addEventListener('error', function () {
-        errorHandler('Произошла ошибка соединения');
-      });
-      xhr.addEventListener('timeout', function () {
-        errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-      });
-      xhr.timeout = 100000; // 100s
     });
+    xhr.addEventListener('error', function () {
+      errorHandler('Произошла ошибка соединения');
+    });
+    xhr.addEventListener('timeout', function () {
+      errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+    xhr.timeout = 100000; // 100s
     return xhr;
   };
 

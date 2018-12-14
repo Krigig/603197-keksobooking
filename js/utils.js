@@ -26,13 +26,9 @@
   };
 
   var resultSendHandler = function (result) {
-    if (result === 'success') {
-      var resultTemplate = document.querySelector('#success').content.querySelector('.success');
-    } else {
-      resultTemplate = document.querySelector('#error').content.querySelector('.error');
-    }
-    // var resultTemplate = document.querySelector result === 'success' ? ('#success').content.querySelector('.success') : ('#error').content.querySelector('.error')];
+    var resultTemplate = document.querySelector('#' + result).content.querySelector('.' + result);
     result = resultTemplate.cloneNode(true);
+
     var removeElementHandler = function () {
       document.querySelector('main').removeChild(result);
       document.removeEventListener('click', removeElementHandler);
