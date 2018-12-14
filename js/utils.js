@@ -2,6 +2,7 @@
 
 // utils.js
 (function () {
+  var ESC_KEY = 27;
   var random = function (min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   };
@@ -24,11 +25,29 @@
     return copyArr;
   };
 
+  var resultSendHandler = function (result) {
+    var resultTemplate = document.querySelector('#' + result).content.querySelector('.' + result);
+    result = resultTemplate.cloneNode(true);
+
+    var removeElementHandler = function () {
+      document.querySelector('main').removeChild(result);
+      document.removeEventListener('click', removeElementHandler);
+    };
+    document.addEventListener('click', removeElementHandler);
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ESC_KEY) {
+        removeElementHandler(result);
+      }
+    });
+    document.querySelector('main').appendChild(result);
+  };
+
   window.utils = {
     random: random,
     randomArray: randomArray,
     getRamdomArray: getRamdomArray,
-    getShuffledArray: getShuffledArray
+    getShuffledArray: getShuffledArray,
+    resultSendHandler: resultSendHandler
   };
 
 })();

@@ -1,7 +1,7 @@
 'use strict';
 // map.js
 (function () {
-  var ADS_COUNT = 8;
+
   var BUTTON_MIDLE_WIDTH = 65 / 2;
   var BUTTON_HEIGHT = 62;
   var BUTTON_HEIGHT_END = BUTTON_HEIGHT + 22;
@@ -15,8 +15,10 @@
   var renderAds = function (adsArray) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < adsArray.length; i++) {
-      var pinElement = window.pin(adsArray[i], pinClickHandler);
-      fragment.appendChild(pinElement);
+      if (adsArray[i].offer) {
+        var pinElement = window.pin(adsArray[i], pinClickHandler);
+        fragment.appendChild(pinElement);
+      }
     }
     mapPins.appendChild(fragment);
     return mapPins;
@@ -50,9 +52,16 @@
 
   var activateMap = function () {
     isDisabled = toggleFields(false);
+    renderAds(window.data);
+  };
 
-    var ads = window.data(ADS_COUNT);
-    renderAds(ads);
+  var disabledMap = function () {
+    isDisabled = toggleFields(true);
+    var mapPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    for (var i = 0; i < mapPinsArray.length; i++) {
+      mapPins.removeChild(mapPinsArray[i]);
+    }
+    mainPinElement.style = 'left: 570px; top: 375px;';
   };
 
   var pinClickHandler = function (ad) {
@@ -120,6 +129,9 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  window.map = mapElement;
+  window.map = {
+    mapElement: mapElement,
+    disabledMap: disabledMap,
+  };
 })();
 
