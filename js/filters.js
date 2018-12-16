@@ -10,11 +10,11 @@
   var housingGuests = form.querySelector('#housing-guests');
 
   var getFilteredAds = function () {
-    var filteredArr = selectValueOfStringChangeHandler(housingType, 'type', window.data);
-    filteredArr = selectValueOfNumberChangeHandler(housingRooms, 'rooms', filteredArr);
-    filteredArr = selectValueOfNumberChangeHandler(housingGuests, 'guests', filteredArr);
+    var filteredArr = selectChangeHandler(housingType, 'type', window.data);
+    filteredArr = selectChangeHandler(housingRooms, 'rooms', filteredArr);
+    filteredArr = selectChangeHandler(housingGuests, 'guests', filteredArr);
     filteredArr = priceChangeHandler(filteredArr);
-    filteredArr = changeFeuturesHandler(filteredArr);
+    filteredArr = changeFeaturesHandler(filteredArr);
     return filteredArr;
   };
 
@@ -36,25 +36,17 @@
     return true;
   };
 
-  var selectValueOfStringChangeHandler = function (select, key, filteredArr) {
+  var selectChangeHandler = function (select, key, filteredArr) {
     if (select.value !== 'any') {
       return filteredArr.filter(function (elem) {
-        return elem.offer[key] === select.value;
+        var selectValue = isNaN(Number(select.value)) ? select.value : Number(select.value);
+        return elem.offer[key] === selectValue;
       });
     }
     return filteredArr;
   };
 
-  var selectValueOfNumberChangeHandler = function (select, key, filteredArr) {
-    if (select.value !== 'any') {
-      return filteredArr.filter(function (elem) {
-        return elem.offer[key] === +select.value;
-      });
-    }
-    return filteredArr;
-  };
-
-  var getAdWithfeaturesNeed = function (featureNeed, filteredArr) {
+  var getAdWithFeaturesNeed = function (featureNeed, filteredArr) {
     return filteredArr.filter(function (elem) {
       var result = false;
       for (var j = 0; j < elem.offer.features.length; j++) {
@@ -67,11 +59,11 @@
     });
   };
 
-  var changeFeuturesHandler = function (filteredArr) {
+  var changeFeaturesHandler = function (filteredArr) {
     var featuresArray = form.querySelectorAll('.map__features input:checked');
     for (var i = 0; i < featuresArray.length; i++) {
       var featureNeed = featuresArray[i].value;
-      filteredArr = getAdWithfeaturesNeed(featureNeed, filteredArr);
+      filteredArr = getAdWithFeaturesNeed(featureNeed, filteredArr);
     }
 
     return filteredArr;
