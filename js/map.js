@@ -14,7 +14,8 @@
 
   var renderAds = function (adsArray) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < adsArray.length; i++) {
+    var length = adsArray.length > 5 ? 5 : adsArray.length;
+    for (var i = 0; i < length; i++) {
       if (adsArray[i].offer) {
         var pinElement = window.pin(adsArray[i], pinClickHandler);
         fragment.appendChild(pinElement);
@@ -55,12 +56,16 @@
     renderAds(window.data);
   };
 
-  var disabledMap = function () {
-    isDisabled = toggleFields(true);
+  var removePins = function () {
     var mapPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
     for (var i = 0; i < mapPinsArray.length; i++) {
       mapPins.removeChild(mapPinsArray[i]);
     }
+  };
+
+  var disabledMap = function () {
+    isDisabled = toggleFields(true);
+    removePins();
     mainPinElement.style = 'left: 570px; top: 375px;';
   };
 
@@ -132,6 +137,8 @@
   window.map = {
     mapElement: mapElement,
     disabledMap: disabledMap,
+    removePins: removePins,
+    renderAds: renderAds
   };
 })();
 
