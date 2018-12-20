@@ -9,14 +9,14 @@
     bungalo: 0
   };
 
-  var typeNewAd = form.querySelector('#type');
-  var priceNewAd = form.querySelector('#price');
+  var typeNewAdElement = form.querySelector('#type');
+  var priceNewAdElement = form.querySelector('#price');
 
   var priceInvalid = function (number) {
     if (number === '') {
       number = 0;
     }
-    priceNewAd.style.border = +number < priceNewAd.min || +number > priceNewAd.max ? '2px solid red' : '';
+    priceNewAdElement.style.border = +number < priceNewAdElement.min || +number > priceNewAdElement.max ? '2px solid red' : '';
   };
 
   var checkInvalidpriceHandler = function (evt) {
@@ -25,53 +25,53 @@
 
   var checkInvalidtypeHandler = function (evt) {
     var type = evt.target.value;
-    priceNewAd.min = minPriceTypes[type];
-    priceNewAd.placeholder = minPriceTypes[type];
+    priceNewAdElement.min = minPriceTypes[type];
+    priceNewAdElement.placeholder = minPriceTypes[type];
 
-    priceInvalid(priceNewAd.value);
+    priceInvalid(priceNewAdElement.value);
   };
 
-  typeNewAd.addEventListener('change', checkInvalidtypeHandler);
-  priceNewAd.addEventListener('change', checkInvalidpriceHandler);
+  typeNewAdElement.addEventListener('change', checkInvalidtypeHandler);
+  priceNewAdElement.addEventListener('change', checkInvalidpriceHandler);
 
-  var timeinNewAd = form.querySelector('#timein').options;
-  var timeoutNewAd = form.querySelector('#timeout').options;
+  var timeinNewAdElement = form.querySelector('#timein').options;
+  var timeoutNewAdElement = form.querySelector('#timeout').options;
 
   form.querySelector('#timein').addEventListener('change', function () {
-    timeoutNewAd.selectedIndex = timeinNewAd.selectedIndex;
+    timeoutNewAdElement.selectedIndex = timeinNewAdElement.selectedIndex;
   });
 
   form.querySelector('#timeout').addEventListener('change', function () {
-    timeinNewAd.selectedIndex = timeoutNewAd.selectedIndex;
+    timeinNewAdElement.selectedIndex = timeoutNewAdElement.selectedIndex;
   });
 
-  var roomNumberNewAd = form.querySelector('#room_number');
-  var capacityNewAd = form.querySelector('#capacity');
+  var roomNumberNewAdElement = form.querySelector('#room_number');
+  var capacityNewAdElement = form.querySelector('#capacity');
 
   var madeDisabledCapacity = function () {
-    var roomNumberValue = roomNumberNewAd.value;
+    var roomNumberValue = roomNumberNewAdElement.value;
 
     if (roomNumberValue === '100') {
-      capacityNewAd.options[3].disabled = false;
-      for (var i = 0; i < capacityNewAd.options.length - 1; i++) {
-        capacityNewAd.options[i].disabled = true;
+      capacityNewAdElement.options[3].disabled = false;
+      for (var i = 0; i < capacityNewAdElement.options.length - 1; i++) {
+        capacityNewAdElement.options[i].disabled = true;
       }
     } else {
-      for (i = 0; i < capacityNewAd.options.length; i++) {
-        if (capacityNewAd.options[i].value <= roomNumberValue) {
-          capacityNewAd.options[i].disabled = false;
+      for (i = 0; i < capacityNewAdElement.options.length; i++) {
+        if (capacityNewAdElement.options[i].value <= roomNumberValue) {
+          capacityNewAdElement.options[i].disabled = false;
         } else {
-          capacityNewAd.options[i].disabled = true;
+          capacityNewAdElement.options[i].disabled = true;
         }
       }
-      capacityNewAd.options[3].disabled = true;
+      capacityNewAdElement.options[3].disabled = true;
     }
   };
 
   var madeErrorCapacity = function () {
-    var capacityIndex = capacityNewAd.options.selectedIndex;
-    var capacityOption = capacityNewAd.options[capacityIndex];
-    capacityNewAd.style.border = capacityOption.disabled ? '2px solid red' : '';
+    var capacityIndex = capacityNewAdElement.options.selectedIndex;
+    var capacityOption = capacityNewAdElement.options[capacityIndex];
+    capacityNewAdElement.style.border = capacityOption.disabled ? '2px solid red' : '';
     return capacityOption.disabled;
   };
 
@@ -89,7 +89,7 @@
     window.map.disabledMap();
   };
 
-  var getsuccessHandler = function () {
+  var getSuccessHandler = function () {
     window.utils.resultSendHandler('success');
     clickResetHandler();
   };
@@ -107,7 +107,7 @@
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
     if (!madeErrorCapacity()) {
-      window.backend.upload(new FormData(form), getsuccessHandler, getErrorHandler);
+      window.backend.upload(new FormData(form), getSuccessHandler, getErrorHandler);
     }
   });
 
