@@ -2,17 +2,18 @@
 (function () {
   var MAX_PRICE = 50000;
   var MIN_PRICE = 10000;
+  var DEBOUNCE_INTERVAL = 500; // ms
 
   var form = document.querySelector('.map__filters');
-  var housingType = form.querySelector('#housing-type');
-  var housingPrice = form.querySelector('#housing-price');
-  var housingRooms = form.querySelector('#housing-rooms');
-  var housingGuests = form.querySelector('#housing-guests');
+  var housingTypeElement = form.querySelector('#housing-type');
+  var housingPriceElement = form.querySelector('#housing-price');
+  var housingRoomsElement = form.querySelector('#housing-rooms');
+  var housingGuestsElement = form.querySelector('#housing-guests');
 
   var getFilteredAds = function () {
-    var filteredArr = selectChangeHandler(housingType, 'type', window.data);
-    filteredArr = selectChangeHandler(housingRooms, 'rooms', filteredArr);
-    filteredArr = selectChangeHandler(housingGuests, 'guests', filteredArr);
+    var filteredArr = selectChangeHandler(housingTypeElement, 'type', window.data);
+    filteredArr = selectChangeHandler(housingRoomsElement, 'rooms', filteredArr);
+    filteredArr = selectChangeHandler(housingGuestsElement, 'guests', filteredArr);
     filteredArr = priceChangeHandler(filteredArr);
     filteredArr = changeFeaturesHandler(filteredArr);
     return filteredArr;
@@ -20,7 +21,7 @@
 
   var priceChangeHandler = function (filteredArr) {
     return filteredArr.filter(function (elem) {
-      return getPriceCondition(housingPrice.value, elem.offer.price);
+      return getPriceCondition(housingPriceElement.value, elem.offer.price);
     });
 
   };
@@ -68,8 +69,6 @@
 
     return filteredArr;
   };
-
-  var DEBOUNCE_INTERVAL = 500; // ms
 
   var debounce = function (cb) {
     var lastTimeout = null;

@@ -2,7 +2,7 @@
 // map.js
 (function () {
 
-  var BUTTON_MIDLE_WIDTH = 65 / 2;
+  var BUTTON_MIDLE_WIDTH = 64 / 2;
   var BUTTON_HEIGHT = 62;
   var BUTTON_HEIGHT_END = BUTTON_HEIGHT + 22;
 
@@ -30,7 +30,7 @@
   var inputAddress = document.querySelector('#address');
   var mainPinElement = document.querySelector('.map__pin--main');
 
-  inputAddress.value = (document.body.clientWidth / 2) + ', ' + 400;
+  inputAddress.value = Math.round(document.body.clientWidth / 2) + ', ' + 400;
 
   var setCoords = function (x, y) {
     inputAddress.value = x + ', ' + y;
