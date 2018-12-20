@@ -2,6 +2,7 @@
 (function () {
   var MAX_PRICE = 50000;
   var MIN_PRICE = 10000;
+  var DEBOUNCE_INTERVAL = 500; // ms
 
   var form = document.querySelector('.map__filters');
   var housingType = form.querySelector('#housing-type');
@@ -68,8 +69,6 @@
 
     return filteredArr;
   };
-
-  var DEBOUNCE_INTERVAL = 500; // ms
 
   var debounce = function (cb) {
     var lastTimeout = null;
