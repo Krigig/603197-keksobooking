@@ -9,7 +9,7 @@
   var COORD_Y_MAX = 630;
   var COORD_Y_MIN = 130;
 
-  var defoltButtonCoords = {
+  var defaultButtonCoords = {
     x: Math.round(document.body.clientWidth / 2),
     y: Math.round(mapElement.clientHeight / 2)
   };
@@ -35,7 +35,7 @@
   var inputAddress = document.querySelector('#address');
   var mainPinElement = document.querySelector('.map__pin--main');
 
-  inputAddress.value = defoltButtonCoords.x + ', ' + defoltButtonCoords.y;
+  inputAddress.value = defaultButtonCoords.x + ', ' + defaultButtonCoords.y;
 
   var setCoords = function (x, y) {
     inputAddress.value = x + ', ' + y;
@@ -74,8 +74,8 @@
   var disabledMap = function () {
     isDisabled = toggleFields(true);
     removePins();
-    mainPinElement.style.left = defoltButtonCoords.x - BUTTON_MIDLE_WIDTH + 'px';
-    mainPinElement.style.top = defoltButtonCoords.y + 'px';
+    mainPinElement.style.left = defaultButtonCoords.x - BUTTON_MIDLE_WIDTH + 'px';
+    mainPinElement.style.top = defaultButtonCoords.y + 'px';
   };
 
   var pinClickHandler = function (ad) {
