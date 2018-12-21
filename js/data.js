@@ -19,3 +19,5 @@
 
   window.backend.load(successHandler, errorHandler);
 })();
+
+// экспортируется только одно значение

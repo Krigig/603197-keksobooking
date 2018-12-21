@@ -2,9 +2,10 @@
 // map.js
 (function () {
 
-  var BUTTON_MIDLE_WIDTH = 64 / 2;
+  var BUTTON_MIDLE_WIDTH = Math.round(65 / 2);
   var BUTTON_HEIGHT = 62;
   var BUTTON_HEIGHT_END = BUTTON_HEIGHT + 22;
+  var MAX_VALUE_PINS = 5;
 
   var COORD_Y_MAX = 630;
   var COORD_Y_MIN = 130;
@@ -14,7 +15,7 @@
 
   var renderAds = function (adsArray) {
     var fragment = document.createDocumentFragment();
-    var length = adsArray.length > 5 ? 5 : adsArray.length;
+    var length = adsArray.length > MAX_VALUE_PINS ? MAX_VALUE_PINS : adsArray.length;
     for (var i = 0; i < length; i++) {
       if (adsArray[i].offer) {
         var pinElement = window.pin(adsArray[i], pinClickHandler);
@@ -30,7 +31,7 @@
   var inputAddress = document.querySelector('#address');
   var mainPinElement = document.querySelector('.map__pin--main');
 
-  inputAddress.value = Math.round(document.body.clientWidth / 2) + ', ' + 400;
+  inputAddress.value = Math.round(document.body.clientWidth / 2) + ', ' + Math.round(mapElement.clientHeight / 2);
 
   var setCoords = function (x, y) {
     inputAddress.value = x + ', ' + y;
@@ -40,12 +41,20 @@
     mapElement.classList[isDisabled ? 'add' : 'remove']('map--faded');
     document.querySelector('.ad-form').classList[isDisabled ? 'add' : 'remove']('ad-form--disabled');
 
-    for (var i = 0; i < adFormElements.length; i++) {
-      adFormElements[i].disabled = isDisabled;
-    }
-    for (i = 0; i < inputsAdForm.length; i++) {
-      inputsAdForm[i].disabled = isDisabled;
-    }
+    adFormElements.forEach(function (adFormElement) {
+      adFormElement.disabled = isDisabled;
+    });
+
+    inputsAdForm.forEach(function (inputAdForm) {
+      inputAdForm.disabled = isDisabled;
+    });
+
+    // for (var i = 0; i < adFormElements.length; i++) {
+    //   adFormElements[i].disabled = isDisabled;
+    // }
+    // for (i = 0; i < inputsAdForm.length; i++) {
+    //   inputsAdForm[i].disabled = isDisabled;
+    // }
     return isDisabled;
   };
 
@@ -58,15 +67,21 @@
 
   var removePins = function () {
     var mapPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-    for (var i = 0; i < mapPinsArray.length; i++) {
-      mapPins.removeChild(mapPinsArray[i]);
-    }
+
+    mapPinsArray.forEach(function (mapPin) {
+      mapPins.removeChild(mapPin);
+    });
+
+    // for (var i = 0; i < mapPinsArray.length; i++) {
+    //   mapPins.removeChild(mapPinsArray[i]);
+    // }
   };
 
   var disabledMap = function () {
     isDisabled = toggleFields(true);
     removePins();
-    mainPinElement.style = 'left: 570px; top: 375px;';
+    mainPinElement.style.left = Math.round(document.body.clientWidth / 2) - BUTTON_MIDLE_WIDTH + 'px';
+    mainPinElement.style.top = Math.round(mapElement.clientHeight / 2) + 'px';
   };
 
   var pinClickHandler = function (ad) {
@@ -75,7 +90,6 @@
   };
 
   // Перетаскивание главного пина
-
   mainPinElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
@@ -84,14 +98,9 @@
       y: evt.clientY
     };
 
-    var mainPinElementCoords = {
-      'x': mainPinElement.offsetLeft + BUTTON_MIDLE_WIDTH,
-      'y': mainPinElement.offsetTop + BUTTON_HEIGHT_END
-    };
     var dragged = false;
 
     var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
       dragged = true;
 
       var shift = {
@@ -104,18 +113,16 @@
         y: moveEvt.clientY
       };
 
-      mainPinElementCoords.x = mainPinElementCoords.x - shift.x;
-      mainPinElementCoords.y = mainPinElementCoords.y - shift.y;
-
-      var mainPinElementCoordsCSS = {
-        'x': mainPinElement.offsetLeft - shift.x,
-        'y': mainPinElement.offsetTop - shift.y
+      var newCoord = {
+        x: mainPinElement.offsetLeft - shift.x,
+        y: mainPinElement.offsetTop - shift.y
       };
 
-      if (mainPinElementCoordsCSS.y < COORD_Y_MAX && mainPinElementCoordsCSS.y > COORD_Y_MIN && (mainPinElementCoords.x + BUTTON_MIDLE_WIDTH) < mainPinElement.offsetParent.offsetWidth && (mainPinElementCoords.x - BUTTON_MIDLE_WIDTH) > 0) {
-        mainPinElement.style.left = mainPinElementCoordsCSS.x + 'px';
-        mainPinElement.style.top = mainPinElementCoordsCSS.y + 'px';
-        setCoords(mainPinElementCoords.x, mainPinElementCoords.y);
+      if (
+        newCoord.y <= COORD_Y_MAX && newCoord.y >= COORD_Y_MIN && newCoord.x + BUTTON_MIDLE_WIDTH * 2 < mainPinElement.offsetParent.offsetWidth && newCoord.x > 0) {
+        mainPinElement.style.left = newCoord.x + 'px';
+        mainPinElement.style.top = newCoord.y + 'px';
+        setCoords(newCoord.x, newCoord.y);
       }
     };
 

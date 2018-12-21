@@ -62,10 +62,15 @@
 
   var changeFeaturesHandler = function (filteredArr) {
     var featuresArray = form.querySelectorAll('.map__features input:checked');
-    for (var i = 0; i < featuresArray.length; i++) {
-      var featureNeed = featuresArray[i].value;
+    featuresArray.forEach(function (feature) {
+      var featureNeed = feature.value;
       filteredArr = getAdWithFeaturesNeed(featureNeed, filteredArr);
-    }
+    });
+
+    // for (var i = 0; i < featuresArray.length; i++) {
+    //   var featureNeed = featuresArray[i].value;
+    //   filteredArr = getAdWithFeaturesNeed(featureNeed, filteredArr);
+    // }
 
     return filteredArr;
   };

@@ -29,21 +29,32 @@
     if (offer.features.length === 0) {
       cardElement.removeChild(featuresBlockElement);
     } else {
-      for (var i = 0; i < offer.features.length; i++) {
+      offer.features.forEach(function (feature) {
         var liElement = document.createElement('li');
-        liElement.className = className + ' ' + className + '--' + offer.features[i];
+        liElement.className = className + ' ' + className + '--' + feature;
         featuresFragment.appendChild(liElement);
-      }
+      });
+      // for (var i = 0; i < offer.features.length; i++) {
+      //   var liElement = document.createElement('li');
+      //   liElement.className = className + ' ' + className + '--' + offer.features[i];
+      //   featuresFragment.appendChild(liElement);
+      // }
       featuresBlockElement.appendChild(featuresFragment);
     }
 
     if (offer.photos.length !== 0) {
-      for (var k = 0; k < offer.photos.length; k++) {
-        var photosArray = cardElement.querySelectorAll('.popup__photos img');
+      var photosArray = cardElement.querySelectorAll('.popup__photos img');
+      offer.photos.forEach(function (photo) {
         var photoElement = cardElement.querySelector('.popup__photos img').cloneNode(true);
-        photoElement.src = offer.photos[k];
+        photoElement.src = photo;
         cardElement.querySelector('.popup__photos').appendChild(photoElement);
-      }
+      });
+      // for (var k = 0; k < offer.photos.length; k++) {
+      //   var photosArray = cardElement.querySelectorAll('.popup__photos img');
+      //   var photoElement = cardElement.querySelector('.popup__photos img').cloneNode(true);
+      //   photoElement.src = offer.photos[k];
+      //   cardElement.querySelector('.popup__photos').appendChild(photoElement);
+      // }
       cardElement.querySelector('.popup__photos').removeChild(photosArray[0]);
     } else {
       cardElement.removeChild(cardElement.querySelector('.popup__photos'));
