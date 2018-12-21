@@ -2,13 +2,17 @@
 // map.js
 (function () {
 
-  var BUTTON_MIDLE_WIDTH = Math.round(65 / 2);
-  var BUTTON_HEIGHT = 62;
-  var BUTTON_HEIGHT_END = BUTTON_HEIGHT + 22;
+  var BUTTON_MIDLE_WIDTH = 64 / 2;
+  var BUTTON_HEIGHT = 84;
   var MAX_VALUE_PINS = 5;
 
   var COORD_Y_MAX = 630;
   var COORD_Y_MIN = 130;
+
+  var defoltButtonCoords = {
+    x: Math.round(document.body.clientWidth / 2),
+    y: Math.round(mapElement.clientHeight / 2)
+  };
 
   var mapElement = document.querySelector('.map');
   var mapPins = document.querySelector('.map__pins');
@@ -31,7 +35,7 @@
   var inputAddress = document.querySelector('#address');
   var mainPinElement = document.querySelector('.map__pin--main');
 
-  inputAddress.value = Math.round(document.body.clientWidth / 2) + ', ' + Math.round(mapElement.clientHeight / 2);
+  inputAddress.value = defoltButtonCoords.x + ', ' + defoltButtonCoords.y;
 
   var setCoords = function (x, y) {
     inputAddress.value = x + ', ' + y;
@@ -49,12 +53,6 @@
       inputAdForm.disabled = isDisabled;
     });
 
-    // for (var i = 0; i < adFormElements.length; i++) {
-    //   adFormElements[i].disabled = isDisabled;
-    // }
-    // for (i = 0; i < inputsAdForm.length; i++) {
-    //   inputsAdForm[i].disabled = isDisabled;
-    // }
     return isDisabled;
   };
 
@@ -71,17 +69,13 @@
     mapPinsArray.forEach(function (mapPin) {
       mapPins.removeChild(mapPin);
     });
-
-    // for (var i = 0; i < mapPinsArray.length; i++) {
-    //   mapPins.removeChild(mapPinsArray[i]);
-    // }
   };
 
   var disabledMap = function () {
     isDisabled = toggleFields(true);
     removePins();
-    mainPinElement.style.left = Math.round(document.body.clientWidth / 2) - BUTTON_MIDLE_WIDTH + 'px';
-    mainPinElement.style.top = Math.round(mapElement.clientHeight / 2) + 'px';
+    mainPinElement.style.left = defoltButtonCoords.x - BUTTON_MIDLE_WIDTH + 'px';
+    mainPinElement.style.top = defoltButtonCoords.y + 'px';
   };
 
   var pinClickHandler = function (ad) {
@@ -118,11 +112,15 @@
         y: mainPinElement.offsetTop - shift.y
       };
 
-      if (
-        newCoord.y <= COORD_Y_MAX && newCoord.y >= COORD_Y_MIN && newCoord.x + BUTTON_MIDLE_WIDTH * 2 < mainPinElement.offsetParent.offsetWidth && newCoord.x > 0) {
+      var pinSpikeCoord = {
+        x: newCoord.x + BUTTON_MIDLE_WIDTH,
+        y: newCoord.y + BUTTON_HEIGHT
+      };
+
+      if (pinSpikeCoord.y <= COORD_Y_MAX && pinSpikeCoord.y >= COORD_Y_MIN && pinSpikeCoord.x < mainPinElement.offsetParent.offsetWidth && pinSpikeCoord.x > 0) {
         mainPinElement.style.left = newCoord.x + 'px';
         mainPinElement.style.top = newCoord.y + 'px';
-        setCoords(newCoord.x, newCoord.y);
+        setCoords(pinSpikeCoord.x, pinSpikeCoord.y);
       }
     };
 

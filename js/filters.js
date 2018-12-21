@@ -4,11 +4,11 @@
   var MIN_PRICE = 10000;
   var DEBOUNCE_INTERVAL = 500; // ms
 
-  var form = document.querySelector('.map__filters');
-  var housingTypeElement = form.querySelector('#housing-type');
-  var housingPriceElement = form.querySelector('#housing-price');
-  var housingRoomsElement = form.querySelector('#housing-rooms');
-  var housingGuestsElement = form.querySelector('#housing-guests');
+  var formElement = document.querySelector('.map__filters');
+  var housingTypeElement = formElement.querySelector('#housing-type');
+  var housingPriceElement = formElement.querySelector('#housing-price');
+  var housingRoomsElement = formElement.querySelector('#housing-rooms');
+  var housingGuestsElement = formElement.querySelector('#housing-guests');
 
   var getFilteredAds = function () {
     var filteredArr = selectChangeHandler(housingTypeElement, 'type', window.data);
@@ -61,16 +61,11 @@
   };
 
   var changeFeaturesHandler = function (filteredArr) {
-    var featuresArray = form.querySelectorAll('.map__features input:checked');
+    var featuresArray = formElement.querySelectorAll('.map__features input:checked');
     featuresArray.forEach(function (feature) {
       var featureNeed = feature.value;
       filteredArr = getAdWithFeaturesNeed(featureNeed, filteredArr);
     });
-
-    // for (var i = 0; i < featuresArray.length; i++) {
-    //   var featureNeed = featuresArray[i].value;
-    //   filteredArr = getAdWithFeaturesNeed(featureNeed, filteredArr);
-    // }
 
     return filteredArr;
   };
@@ -81,9 +76,9 @@
     return function () {
       var parameters = arguments;
       if (lastTimeout) {
-        window.clearTimeout(lastTimeout);
+        clearTimeout(lastTimeout);
       }
-      lastTimeout = window.setTimeout(function () {
+      lastTimeout = setTimeout(function () {
         cb.apply(null, parameters);
       }, DEBOUNCE_INTERVAL);
     };
@@ -96,6 +91,8 @@
     window.map.renderAds(resultArray);
   });
 
-  form.addEventListener('change', formFilterChangeHandler);
+  formElement.addEventListener('change', formFilterChangeHandler);
+
+  window.filters = formElement;
 
 })();

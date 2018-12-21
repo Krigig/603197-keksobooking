@@ -25,6 +25,12 @@
     return copyArr;
   };
 
+  var isEscEvent = function (evt, action) {
+    if (evt.keyCode === ESC_KEY) {
+      action();
+    }
+  };
+
   var resultSendHandler = function (result) {
     var resultTemplate = document.querySelector('#' + result).content.querySelector('.' + result);
     result = resultTemplate.cloneNode(true);
@@ -35,9 +41,7 @@
     };
     document.addEventListener('click', removeElementHandler);
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ESC_KEY) {
-        removeElementHandler(result);
-      }
+      isEscEvent(evt, removeElementHandler(result));
     });
     document.querySelector('main').appendChild(result);
   };
@@ -47,7 +51,8 @@
     randomArray: randomArray,
     getRamdomArray: getRamdomArray,
     getShuffledArray: getShuffledArray,
-    resultSendHandler: resultSendHandler
+    resultSendHandler: resultSendHandler,
+    isEscEvent: isEscEvent
   };
 
 })();

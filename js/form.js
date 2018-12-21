@@ -1,7 +1,7 @@
 'use strict';
 // form.js
 (function () {
-  var form = document.querySelector('.ad-form');
+  var formElement = document.querySelector('.ad-form');
   var minPriceTypes = {
     palace: 10000,
     flat: 1000,
@@ -9,8 +9,8 @@
     bungalo: 0
   };
 
-  var typeNewAdElement = form.querySelector('#type');
-  var priceNewAdElement = form.querySelector('#price');
+  var typeNewAdElement = formElement.querySelector('#type');
+  var priceNewAdElement = formElement.querySelector('#price');
 
   var priceInvalid = function (number) {
     if (number === '') {
@@ -34,19 +34,19 @@
   typeNewAdElement.addEventListener('change', checkInvalidtypeHandler);
   priceNewAdElement.addEventListener('change', checkInvalidpriceHandler);
 
-  var timeinNewAdElement = form.querySelector('#timein').options;
-  var timeoutNewAdElement = form.querySelector('#timeout').options;
+  var timeinNewAdElement = formElement.querySelector('#timein').options;
+  var timeoutNewAdElement = formElement.querySelector('#timeout').options;
 
-  form.querySelector('#timein').addEventListener('change', function () {
+  formElement.querySelector('#timein').addEventListener('change', function () {
     timeoutNewAdElement.selectedIndex = timeinNewAdElement.selectedIndex;
   });
 
-  form.querySelector('#timeout').addEventListener('change', function () {
+  formElement.querySelector('#timeout').addEventListener('change', function () {
     timeinNewAdElement.selectedIndex = timeoutNewAdElement.selectedIndex;
   });
 
-  var roomNumberNewAdElement = form.querySelector('#room_number');
-  var capacityNewAdElement = form.querySelector('#capacity');
+  var roomNumberNewAdElement = formElement.querySelector('#room_number');
+  var capacityNewAdElement = formElement.querySelector('#capacity');
 
   var madeDisabledCapacity = function () {
     var roomNumberValue = roomNumberNewAdElement.value;
@@ -81,11 +81,12 @@
   };
 
   checkInvalidCapacityHandler();
-  form.querySelector('#room_number').addEventListener('change', checkInvalidCapacityHandler);
-  form.querySelector('#capacity').addEventListener('change', checkInvalidCapacityHandler);
+  formElement.querySelector('#room_number').addEventListener('change', checkInvalidCapacityHandler);
+  formElement.querySelector('#capacity').addEventListener('change', checkInvalidCapacityHandler);
 
   var clickResetHandler = function () {
-    form.reset();
+    window.filters.reset();
+    formElement.reset();
     window.map.disabledMap();
   };
 
@@ -98,16 +99,16 @@
     window.utils.resultSendHandler('error');
   };
 
-  var btnReset = form.querySelector('.ad-form__reset');
-  btnReset.addEventListener('click', function (evt) {
+  var btnResetElement = formElement.querySelector('.ad-form__reset');
+  btnResetElement.addEventListener('click', function (evt) {
     evt.preventDefault();
     clickResetHandler();
   });
 
-  form.addEventListener('submit', function (evt) {
+  formElement.addEventListener('submit', function (evt) {
     evt.preventDefault();
     if (!madeErrorCapacity()) {
-      window.backend.upload(new FormData(form), getSuccessHandler, getErrorHandler);
+      window.backend.upload(new FormData(formElement), getSuccessHandler, getErrorHandler);
     }
   });
 
@@ -141,7 +142,7 @@
             newPhoto.height = 70;
             newPhoto.style = 'border-radius: 5px';
             newPhotoWrapper.appendChild(newPhoto);
-            previewPhotos.appendChild(newPhotoWrapper);
+            preview.appendChild(newPhotoWrapper);
           }
         });
 
@@ -151,14 +152,14 @@
     });
   };
 
-  var fileChooserAvatar = document.querySelector('.ad-form__field input[type=file]');
-  var previewAvatar = document.querySelector('.ad-form-header__preview img');
+  var fileChooserAvatarElement = document.querySelector('.ad-form__field input[type=file]');
+  var previewAvatarElement = document.querySelector('.ad-form-header__preview img');
 
-  getPhotosLoad(fileChooserAvatar, previewAvatar);
+  getPhotosLoad(fileChooserAvatarElement, previewAvatarElement);
 
-  var fileChooserPhotos = document.querySelector('.ad-form__upload input[type=file]');
-  var previewPhotos = document.querySelector('.ad-form__photo-container');
-  var previewPhotoWrapper = document.querySelector('.ad-form__photo');
+  var fileChooserPhotosElement = document.querySelector('.ad-form__upload input[type=file]');
+  var previewPhotosElement = document.querySelector('.ad-form__photo-container');
+  var previewPhotoWrapperElement = document.querySelector('.ad-form__photo');
 
-  getPhotosLoad(fileChooserPhotos, previewPhotos, previewPhotoWrapper);
+  getPhotosLoad(fileChooserPhotosElement, previewPhotosElement, previewPhotoWrapperElement);
 })();
