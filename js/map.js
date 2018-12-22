@@ -9,13 +9,13 @@
   var COORD_Y_MAX = 630;
   var COORD_Y_MIN = 130;
 
+  var mapElement = document.querySelector('.map');
+  var mapPins = document.querySelector('.map__pins');
+
   var defaultButtonCoords = {
     x: Math.round(document.body.clientWidth / 2),
     y: Math.round(mapElement.clientHeight / 2)
   };
-
-  var mapElement = document.querySelector('.map');
-  var mapPins = document.querySelector('.map__pins');
 
   var renderAds = function (adsArray) {
     var fragment = document.createDocumentFragment();
